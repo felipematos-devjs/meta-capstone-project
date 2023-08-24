@@ -1,11 +1,15 @@
+import './Nav.css'
+
 const Nav = () =>{
     return(
     <nav>
         <ul>
-            <li><a href={''}>op 1</a></li>
-            <li><a href={''}>op 2</a></li>
-            <li><a href={''}>op 3</a></li>
-            <li><a href={''}>op 4</a></li>
+            <li><a href={''}>Home</a></li>
+            <li><a href={''}>About</a></li>
+            <li><a href={''}>Menu</a></li>
+            <li><a href={''}>Reservations</a></li>
+            <li><a href={''}>Order Online</a></li>
+            <li><a href={''}>Login</a></li>
         </ul>
     </nav>
     )
