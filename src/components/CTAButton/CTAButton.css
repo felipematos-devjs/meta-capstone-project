@@ -1,0 +1,11 @@
+
+.cta-button{
+    background-color: #F4CE14;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    height: 48px;
+    padding: 0 10px;
+    font-weight: bold;
+    white-space: nowrap;
+}

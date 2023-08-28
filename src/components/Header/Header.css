@@ -12,17 +12,38 @@
 .header-top nav{
     grid-column: col-start 4 / span 4;    
     display: flex;
-    justify-content: center;
+    justify-content: right;
     align-items: center;
 }
 
-.header-top nav ul{
+
+
+.header-top .nav-items{
     width: 100%;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    text-align: right;
+    text-align: left;
+    position: absolute;
+    width: fit-content;
+    top: 36px;
+    right: 0;
+    background-color: white;
+    width: 300px;
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    z-index: 2;
 }
+
+.header-top .modal-box{
+    position: relative;
+    display: flex;
+    justify-content: left;
+}
+
+
+
 
 @media (min-width: 700px) {
     .header-top{
@@ -40,12 +61,13 @@
         grid-column: col-start 4 / span 5;
     }
     
-    .header-top nav ul{
+    .header-top .nav-items{
         width: 100%;
         display: flex;
         justify-content: space-between;
         flex-direction: column;
         text-align: right;
+        position: absolute;
     }
 }
 
@@ -67,11 +89,12 @@
         grid-column: col-start 4 / span 8;
     }
 
-    .header-top nav ul{
+    .header-top .nav-items{
         width: 100%;
         display: flex;
         justify-content: space-between;
         flex-direction: row;
+        position: relative;
 
     }
 }
