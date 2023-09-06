@@ -6,7 +6,7 @@ const Table = ({x, y, available, variant, number, scale = 1}) =>{
 
 
     return (
-        <div className="table" style={{left: `${x}%`, top: `${y}%`, scale: 0.5}}>
+        <div className="table" style={{left: `${x}%`, top: `${y}%`}}>
            <img src={images[availability]} alt="" className='chair' style={{width: `${50 * scale}px`}}/>
             
             <p className="chair_number">{number}</p>

@@ -1,34 +1,42 @@
 .reserve-container{
-    width: 100%;
+    margin: 0 50px;
+    width: calc(100vw - 100px);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: calc(100vh - 350px);
     gap: 50px;
-    
 }
 
 .reserve-step{
-    width: calc(90% - 100px);
-    max-width: 500px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: space-between;
     height: fit-content;
-    border: 1px solid #ccc;
-    padding: 50px 50px;
-    border-radius: 15px;
-    box-shadow: 6px 6px 2px rgb(0,0,0,0.15);
 }
+
+.form-box{
+    box-sizing: border-box;
+    border: 1px solid #aaa;
+    padding: 25px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    min-height: 416px;
+}
+
+
 
 .reserve-form{
     display: flex;
     flex-direction: column;
-    gap: 20px;
 }
 
-.reserve-form .row{
+.reserve-form .row, .reserve-confirmation .row{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -50,18 +58,18 @@
 
 .submit-container-right
 {
-   margin-top: 50px;
    width: 100%;
    display: flex;
    justify-content: flex-end;
+   margin-top: 20px;
 }
 
 .submit-container
 {   
-    margin-top: 50px;
     width: 100%;
     display: flex;
     justify-content: space-between;
+    margin-top: 20px;
 }
 
 
@@ -89,7 +97,7 @@
 
 .restaurant-plan{
     position: relative;
-    height: 418px;
+    max-height: 416px;
     max-width: 416px;
     left: 50%;
     transform: translateX(-50%);
@@ -120,4 +128,18 @@
 .restaurant-plan .chair_number
 {
     position: absolute;
+}
+
+.booking-confirmation{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 80%;
+    text-align: center;
+    gap: 30px;
+}
+
+.booking-confirmation svg{
+    color: rgb(0, 146, 0);
 }
