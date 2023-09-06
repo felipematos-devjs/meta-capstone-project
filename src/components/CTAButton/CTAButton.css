@@ -8,4 +8,10 @@
     padding: 0 10px;
     font-weight: bold;
     white-space: nowrap;
+    cursor: pointer;
+    pointer-events: all;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
 }

@@ -8,6 +8,9 @@ import client2 from './client2.jpg'
 import client3 from './client3.jpg'
 import client4 from './client4.jpg'
 import marioadrian from './marioadrian.png'
+import restaurantPlan from './restaurant_plan.png'
+import two_table_square from './two_table.png'
+import two_table_square_unavailable from './two_table_un.png'
 
 const images = {
     special1: special1,
@@ -20,6 +23,9 @@ const images = {
     client3: client3,
     client4: client4,
     marioadrian: marioadrian,
+    restaurantPlan: restaurantPlan,
+    two_table_square: two_table_square,
+    two_table_square_unavailable: two_table_square_unavailable
 }
 
 export default images

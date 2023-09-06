@@ -5,13 +5,19 @@ import Header from './components/Header/Header'
 import Nav from './components/Nav/Nav'
 import Main from './components/Main/Main'
 import Footer from './components/Footer/Footer'
+import ReserveTable from './components/Main/ReserveTable/ReserveTable'
+import { Routes, Route } from 'react-router-dom'
+
 
 function App() {
 
   return (
   <>
       <Header></Header>
-      <Main></Main>
+        <Routes>
+          <Route path='/' element={<Main />}/>
+          <Route path='/reservation' element={<ReserveTable />}/>
+        </Routes>
       <Footer></Footer>
   </>
   )

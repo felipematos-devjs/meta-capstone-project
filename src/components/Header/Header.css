@@ -43,8 +43,6 @@
 }
 
 
-
-
 @media (min-width: 700px) {
     .header-top{
         display: grid;
@@ -97,4 +95,18 @@
         position: relative;
 
     }
+
+    .header-top .nav-items{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        position: relative;
+        top: 0px;
+        right: 0;
+        background-color: white;
+        border: none;
+        z-index: inherit;
+    }
+
 }

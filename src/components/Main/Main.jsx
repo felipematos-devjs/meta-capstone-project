@@ -1,27 +1,25 @@
 import './main.css'
-import images from '../../assets/images/images'
-
-
-
 import Hero from './Hero/Hero'
 import Specials from './Specials/Specials'
 import Testimonials from './Testimonials/Testimonials'
 import About from './About/About'
 
 const Main = () =>{
-    return (<main>
+    return (
+    <main>
         {/* Hero */}
         < Hero />
 
         {/* Specials */}
-       <Specials />
+       < Specials />
 
         {/* testimonials */}
-        <Testimonials />
+        < Testimonials />
 
         {/* about */}
-        <About />
-    </main>)
+        < About />
+    </main>
+    )
 }
 
 export default Main

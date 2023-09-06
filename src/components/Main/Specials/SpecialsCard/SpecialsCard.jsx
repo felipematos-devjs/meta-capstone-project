@@ -1,7 +1,6 @@
 import {MdDeliveryDining} from 'react-icons/md'
 import "./SpecialsCard.css"
 
-
 const SpecialsCard = ({img, name, price, description}) =>{
     return (
         <article className='special-card'>
