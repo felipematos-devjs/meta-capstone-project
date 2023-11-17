@@ -19,6 +19,9 @@ import four_table_square_unavailable from './four_table_square_unavailable.png'
 import four_table_round from './four_table_round.png'
 import four_table_round_unavailable from './four_table_round_unavailable.png'
 
+import arrow from './arrow.svg'
+import selected from './selected.svg'
+
 
 const images = {
     special1: special1,
@@ -37,7 +40,9 @@ const images = {
     four_table_square: four_table_square,
     four_table_square_unavailable: four_table_square_unavailable,
     four_table_round: four_table_round,
-    four_table_round_unavailable: four_table_round_unavailable
+    four_table_round_unavailable: four_table_round_unavailable,
+    arrow: arrow,
+    selected: selected
 }
 
 export default images
