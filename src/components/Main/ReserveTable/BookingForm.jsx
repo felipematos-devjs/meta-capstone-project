@@ -13,6 +13,8 @@ import { Link } from "react-router-dom"
 
 const MAX_PLAN_WIDTH = 416;
 
+import { fetchAPI } from '../../../mockAPI'
+
 const date = new Date()
 //let dateFormat = ((data.getDate() )) + "/" + ((data.getMonth() + 1)) + "/" + data.getFullYear(); 
 let dateFormat = date.getFullYear() + "-" +  (date.getMonth() + 1) + "-" + date.getDate(); 
@@ -64,6 +66,8 @@ const bookingReducer = (state, action) =>{
 }
 
 const AvailableTimes = ({times}) =>{
+    console.log(times)
+   
     return (
         <>
         {times && times.length > 0 &&
@@ -75,8 +79,29 @@ const AvailableTimes = ({times}) =>{
     )
 }
 
-const ChooseOptions = ({step, nextStep, bookingParams, dispatchBookingParams, availableTimes, dispatchAvailableTimes}) =>{
-    
+const ChooseOptions = ({step, nextStep, bookingParams, dispatchBookingParams, availableTimes = [], dispatchAvailableTimes}) =>{
+
+    async function  handleFetchAPI(date){
+        const newDate = new Date(date)
+            //fetch successfully
+            
+            await fetchAPI(newDate)
+            .then(result => {
+                    console.log(result)
+                    dispatchAvailableTimes({value: [...result]})
+                    dispatchBookingParams({type: "changeTime", value: result[0]})
+                })
+            //fetch no existent data
+            .catch((e)=>{
+                    console.log(e)
+                    dispatchAvailableTimes({value: []})
+            })
+    }
+
+    useEffect(()=>{
+
+    }, [bookingParams])
+
     return (
         <> 
             <form className="reserve-form" action="">
@@ -93,8 +118,7 @@ const ChooseOptions = ({step, nextStep, bookingParams, dispatchBookingParams, av
                         id="date" 
                         value={bookingParams.date}
                         onChange={(e) => {
-
-                                dispatchAvailableTimes({availableTimes: e, type: 'update'})
+                                handleFetchAPI(e.target.value)
                                 dispatchBookingParams({type: "changeDate", value: e.target.value})      
                             }}
                         />       
@@ -106,6 +130,7 @@ const ChooseOptions = ({step, nextStep, bookingParams, dispatchBookingParams, av
                         id="time"
                         value={bookingParams.time}
                         onChange={(e) => dispatchBookingParams({type: "changeTime", value: e.target.value})}
+                        disabled={availableTimes && availableTimes.length == 0}
                         >
                             <AvailableTimes times={availableTimes}/>
                         </select>
@@ -247,7 +272,7 @@ const ChooseTable = ({step, nextStep, previousStep, dispatchBookingParams}) =>{
     )
 }
 
-const BookingSummary = ({step, nextStep, previousStep, bookingParams}) =>{
+const BookingSummary = ({step, nextStep, previousStep, bookingParams, submitForm}) =>{
     
     const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const date = new Date(bookingParams.date).toLocaleDateString('en-US', dateOptions)
@@ -275,7 +300,7 @@ const BookingSummary = ({step, nextStep, previousStep, bookingParams}) =>{
                     <p>No! take me back!</p>
                 </CTAButton>
                 
-                <CTAButton onClick={nextStep}>
+                <CTAButton onClick={() => submitForm(bookingParams)}>
                     <p>Yes! Confirm Booking!</p>
                     <BiSolidRightArrow />
                 </CTAButton>
@@ -284,25 +309,18 @@ const BookingSummary = ({step, nextStep, previousStep, bookingParams}) =>{
     )
 }
 
-const BookingConfirmation = ({step}) =>{
-    return (
-        <>
-            <section className="booking-confirmation">
-                <p>Your table has been successfully booked</p>
-                <BsCheckCircle size={64}/>
-                <p>You should be receiving an email confirmation shortly</p>
-                <Link to={'/'} className='link'><b>back to home screen</b></Link>
-            </section>
-        </>
-    )
-}
-
-const BookingForm = ({step, nextStep, previousStep, availableTimes, dispatchAvailableTimes}) =>{
+const BookingForm = ({step, nextStep, previousStep, availableTimes, dispatchAvailableTimes, submitForm}) =>{
 
     const [bookingParams, dispatchBookingParams] = useReducer(bookingReducer, bookingInitialValues)
     
     const childProps = {
-        step, nextStep, previousStep, bookingParams, dispatchBookingParams, availableTimes, dispatchAvailableTimes
+        step, 
+        nextStep, 
+        previousStep, 
+        bookingParams, 
+        dispatchBookingParams, 
+        availableTimes, 
+        dispatchAvailableTimes
     }
     
     return (
@@ -316,9 +334,7 @@ const BookingForm = ({step, nextStep, previousStep, availableTimes, dispatchAvai
                 : step == 2
                     ? <ChooseTable {...childProps}/>
                 : step == 3
-                    ? <BookingSummary {...childProps}/>
-                : step == 4
-                    ? <BookingConfirmation {...childProps}/>:<></>
+                    ? <BookingSummary {...childProps} submitForm={submitForm}/>:<></>
                 }    
             </article>
        </>

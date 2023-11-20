@@ -1,18 +1,13 @@
 import { render, screen} from '@testing-library/react'
 import BookingForm from '../BookingForm'
 
-import { initializeTimes, updateTimes } from '../ReserveTable';
-const timesToTest = 
-[
-    "7:00PM",
-    "7:30PM",
-    "8:00PM",
-    "8:30PM",
-    "9:00PM",
-    "9:30PM",
-    "10:00PM"
-]
+import {updateTimes } from '../ReserveTable.jsx';
+import initializeTimes from '../functions/initializeTimes';
 
+//mocking the updateTimes function
+const availableTimesByDate = {
+    '1': ['10:00', '11:00', '12:00']
+  };
 
 describe('Little Lemon restaurant tests', ()=>{
 
@@ -22,14 +17,16 @@ describe('Little Lemon restaurant tests', ()=>{
         expect(headingElement).toBeInTheDocument;
     })
     
-    test('Check if the initializeTimes function returns the same array', ()=>{
-        const availableTimesArray = initializeTimes()
-        expect(availableTimesArray).toMatchObject(timesToTest)
+    test('Check if the initializeTimes function returns an non empty array', async ()=>{
+        const mock = jest.fn((a)=>console.log(a))
+        const returnValue = await initializeTimes(mock)
+        expect(returnValue).toBeInstanceOf(Array)
+        expect(returnValue).not.toHaveLength(0)
     })
 
     test('Check if the updateTimes function will return the same state', ()=>{
-        const timeArray = updateTimes()
-        expect(timeArray).toMatchObject(timesToTest)
+        const timeArray = updateTimes(null, {value: ['10:00', '11:00', '12:00']})
+        expect(timeArray).toMatchObject(availableTimesByDate['1'])
     })
 
 })

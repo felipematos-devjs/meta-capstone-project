@@ -18,3 +18,14 @@ nav ul li{
     left: 0;
     top: 0;
 }
+
+.nav-items a{
+    color: #333333;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.nav-items a:visited{
+    color: #333333;
+    font-weight: bold;
+}

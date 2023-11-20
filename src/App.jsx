@@ -6,6 +6,7 @@ import Nav from './components/Nav/Nav'
 import Main from './components/Main/Main'
 import Footer from './components/Footer/Footer'
 import ReserveTable from './components/Main/ReserveTable/ReserveTable'
+import ConfirmedBooking from './components/Main/ReserveTable/ConfirmedBooking'
 import { Routes, Route } from 'react-router-dom'
 
 
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Main />}/>
           <Route path='/reservation' element={<ReserveTable />}/>
+          <Route path='/confirmation' element={<ConfirmedBooking />}/>
         </Routes>
       <Footer></Footer>
   </>

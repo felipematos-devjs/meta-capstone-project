@@ -1,59 +1,59 @@
-import { useState, useReducer} from "react"
+import { useState, useReducer, useEffect} from "react"
 import "./ReserveTable.css"
 import BookingForm from "./BookingForm"
-import { useEffect } from "react"
-
-export const initializeTimes = ()=>{
-    return [
-        "7:00PM",
-        "7:30PM",
-        "8:00PM",
-        "8:30PM",
-        "9:00PM",
-        "9:30PM",
-        "10:00PM"
-    ]
-}
-
+import { fetchAPI, submitAPI } from "../../../mockAPI"
+import { useNavigate } from "react-router-dom"
+import initializeTimes from "./functions/initializeTimes"
 
 export const updateTimes = (state, action) =>{
     //get times from dates
-    console.log(state)
-    
-    const newTimes = [...initializeTimes()]
-    return newTimes
+    return [...action.value]
 }
 
 const ReserveTable = () =>{
 
+    const navigate = useNavigate()
     const [curStep, setCurStep] = useState(1)
-    const [availableTimes, dispatchAvailableTimes] = useReducer(updateTimes, initializeTimes())
+    const [availableTimes, dispatchAvailableTimes] = useReducer(updateTimes)
     
-    const submitHandler = (e, step) =>{
+    const nextStepHandler = (e, step) =>{
         e.preventDefault()
         setCurStep(step)
     }
-    
+
+    async function submitForm(formData){
+        console.log(formData)
+        await submitAPI(formData)
+        .then(result => {
+            
+            navigate('/confirmation')
+        })
+        //fetch no existent data
+        .catch((e)=>{
+            console.log(e)
+        })
+    }
+
+    //initialize times based on new Date
     useEffect(()=>{
-        console.log(availableTimes)
-    }, [availableTimes])
-
-
+        initializeTimes(dispatchAvailableTimes)
+    }, [])
 
     return (
         <section className="reserve-container">
             {
                 <BookingForm 
                 step={curStep} 
-                nextStep = {(e) => submitHandler(e, curStep+1)}
+                nextStep = {(e) => nextStepHandler(e, curStep+1)}
                 previousStep = {
                     curStep > 1?
-                        (e) => submitHandler(e, curStep-1)
+                        (e) => nextStepHandler(e, curStep-1)
                         :undefined
                 }
     
                 availableTimes={availableTimes}
                 dispatchAvailableTimes={dispatchAvailableTimes}
+                submitForm={submitForm}
             />
             }  
         </section>
