@@ -9,6 +9,9 @@ It contains the little lemon reserve a table feature and was made with care!
 
 2. Run the project:
 > npm start
+
+3. You can test the project by running
+> npm test
 <br>
 Thank you for reviewing my project!<br>
 - Felipe Matos
