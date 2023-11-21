@@ -4,5 +4,10 @@ This project is the capstone project for the Meta Frontend Developer course
 
 It contains the little lemon reserve a table feature and was made with care!
 
+INSTRUCTIONS:
+
+- npm i
+
+
 Thanks! 
 - Felipe Matos
