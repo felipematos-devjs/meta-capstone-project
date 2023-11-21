@@ -28,7 +28,7 @@ const ReserveTable = () =>{
             
             navigate('/confirmation')
         })
-        //fetch no existent data
+        //get non existent data
         .catch((e)=>{
             console.log(e)
         })

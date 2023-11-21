@@ -55,7 +55,7 @@ const availableTimesByDate = {
         } else {
           reject(new Error('Form submission failed.'));
         }
-      }, 1000); // Simulate API delay
+      }, 3000); // Simulate API delay
     });
   };
 

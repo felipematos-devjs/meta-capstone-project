@@ -2,7 +2,7 @@ import './Footer.css'
 
 import {AiFillFacebook, AiFillInstagram, AiFillTwitterSquare} from 'react-icons/ai'
 import images from '../../assets/images/images'
-
+import { Link } from 'react-router-dom'
 
 const Footer = () =>{
     return (
@@ -12,12 +12,12 @@ const Footer = () =>{
             <nav className='nav-section'>
                 <h4>Navigation</h4>
                 <ul>
-                    <li><a href={''}>Home</a></li>
-                    <li><a href={''}>About</a></li>
-                    <li><a href={''}>Menu</a></li>
-                    <li><a href={''}>Reservations</a></li>
-                    <li><a href={''}>Order Online</a></li>
-                    <li><a href={''}>Login</a></li>
+                    <Link to={'/'}>Home</Link>
+                    <Link to={'/'}>About</Link>
+                    <Link to={'/'}>Menu</Link>
+                    <Link to={'/'}>Reservations</Link>
+                    <Link to={'/'}>Order Online</Link>
+                    <Link to={'/'}>Login</Link>
                 </ul>
             </nav>
             <section className='contact-section'>
@@ -31,9 +31,9 @@ const Footer = () =>{
             <section className='socials-section'>
                 <h4>Social Media</h4>
                 <ul>
-                    <li><AiFillFacebook size={24}/> Facebook</li>
-                    <li><AiFillInstagram size={24}/> Instagram</li>
-                    <li><AiFillTwitterSquare size={24}/> Twitter</li>
+                    <Link to={'/'}><AiFillFacebook size={24}/>Facebook</Link>
+                    <Link to={'/'}><AiFillInstagram size={24}/>Instagram</Link>
+                    <Link to={'/'}><AiFillTwitterSquare size={24}/>Twitter</Link>
                 </ul>
             </section>  
             

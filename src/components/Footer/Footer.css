@@ -30,13 +30,28 @@ footer ul{
     list-style: none;
 }
 
-.socials-section ul li{
+.socials-section ul a{
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
 }
 
+footer .links a, footer .links li{
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 3px;
+    font-size: 16px;
+}
 
+footer .links li{
+    padding: 5px;
+    border-radius: 3px;
+}
+
+footer .links a:hover, footer .links li:hover{
+    background-color: #495E57;
+    color: white;
+}
 
 @media (min-width: 700px) {
     footer{

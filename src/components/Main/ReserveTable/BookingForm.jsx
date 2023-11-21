@@ -1,31 +1,44 @@
+//icons
 import {BiSolidRightArrow, BiSolidLeftArrow, BiTime} from 'react-icons/bi'
+import {MdDateRange, MdOutlinePlace, MdPeopleOutline} from 'react-icons/md'
+import {LiaGlassCheersSolid} from 'react-icons/lia'
+
+//components
 import CTAButton from '../../CTAButton/CTAButton'
 import images from '../../../assets/images/images'
 import Table from './table'
 import { useState, useEffect, useRef, useReducer} from 'react'
-
-import {MdDateRange, MdOutlinePlace, MdPeopleOutline} from 'react-icons/md'
-import {LiaGlassCheersSolid} from 'react-icons/lia'
-
-
-import {BsCheckCircle} from 'react-icons/bs'
-import { Link } from "react-router-dom"
-
-const MAX_PLAN_WIDTH = 416;
-
 import { fetchAPI } from '../../../mockAPI'
+import { Formik, useFormik } from 'formik'
+import CustomMessage from '../../CustomMessage/CustomMessage'
+import * as Yup from 'yup'
 
-const date = new Date()
-//let dateFormat = ((data.getDate() )) + "/" + ((data.getMonth() + 1)) + "/" + data.getFullYear(); 
-let dateFormat = date.getFullYear() + "-" +  (date.getMonth() + 1) + "-" + date.getDate(); 
+//constants
+const MAX_PLAN_WIDTH = 416;
+const today = new Date().toISOString().split('T')[0]
+
+const step1ValidationSchema = Yup.object().shape({
+    date: Yup.date()
+        .min(today, "Please, choose a date from today onwards")
+        .default(today)
+        .required('A valid date must be selected'),
+    time: Yup.string()
+        .required('One of the options must be selected'),
+    guests: Yup.number()
+        .min(1, "The minimum number of guests is 1")
+        .max(4, "The maximum number of guests is 4")
+        .required('This field is required'),
+    occasion: Yup.string()
+        .required('You must select a valid occasion'),
+  });
 
 //values for booking reducer
 const bookingInitialValues = {
-    date: dateFormat,
-    time: "7:00PM",
+    date: today,
+    time: undefined,
     guests: 1,
     occasion: "none",
-    table: 0,
+    table: undefined,
     description: ""
 }
 
@@ -66,7 +79,6 @@ const bookingReducer = (state, action) =>{
 }
 
 const AvailableTimes = ({times}) =>{
-    console.log(times)
    
     return (
         <>
@@ -79,32 +91,63 @@ const AvailableTimes = ({times}) =>{
     )
 }
 
-const ChooseOptions = ({step, nextStep, bookingParams, dispatchBookingParams, availableTimes = [], dispatchAvailableTimes}) =>{
+export const ChooseOptions = ({step, nextStep, bookingParams, dispatchBookingParams, availableTimes = [], dispatchAvailableTimes}) =>{
+
+    const [enableChooseTime, setEnableChooseTime] = useState(false)
+    
+    const formik = useFormik({
+        initialValues: {
+            date: bookingParams.date,
+            time: bookingParams.time,
+            guests: bookingParams.guests,
+            occasion: bookingParams.occasion,
+        },
+        validationSchema: step1ValidationSchema,
+        onSubmit: values => {
+            //console.log(values)
+            nextStep(new Event("mock"), 2)
+        },
+
+    })
 
     async function  handleFetchAPI(date){
-        const newDate = new Date(date)
+            setEnableChooseTime(false)
+            const newDate = new Date(date)
             //fetch successfully
             
             await fetchAPI(newDate)
             .then(result => {
-                    console.log(result)
+                    //console.log(result)
                     dispatchAvailableTimes({value: [...result]})
                     dispatchBookingParams({type: "changeTime", value: result[0]})
+                    dispatchBookingParams({type: "changeTable", value: undefined, description: ''})
                 })
             //fetch no existent data
             .catch((e)=>{
-                    console.log(e)
+                    //console.log(e)
                     dispatchAvailableTimes({value: []})
             })
     }
 
     useEffect(()=>{
+        
+        if (availableTimes && availableTimes.length > 0)
+        {
+            setEnableChooseTime(true)
 
-    }, [bookingParams])
+            if (!bookingParams.time)
+            {
+                dispatchBookingParams({type: "changeTime", value: availableTimes[0]})
+                dispatchBookingParams({type: "changeTable", value: undefined, description: ''})
+                formik.values.time = availableTimes[0]
+            }
+        }
+
+    }, [availableTimes])
 
     return (
         <> 
-            <form className="reserve-form" action="">
+            <form className="reserve-form" action="" id='optionsForm' onSubmit={formik.handleSubmit}>
                 <div className='row'>
                     <h3>How's your reservation?</h3>
                     <p className='step'>step {step}/3</p>
@@ -112,57 +155,92 @@ const ChooseOptions = ({step, nextStep, bookingParams, dispatchBookingParams, av
                 <article className='form-box'>
                     <div className="input-group" role="group">
                         <label htmlFor="date">1. Choose the day of your reservation</label>
-                        <input 
+                        <input
+                        className={`input input-${formik.errors.date && 'error'}`}
+                        data-testid={"date"} 
                         type="date" 
                         name="date" 
+                        min={today}
                         id="date" 
                         value={bookingParams.date}
                         onChange={(e) => {
+                                formik.touched.date = true
+                                formik.handleChange(e)
                                 handleFetchAPI(e.target.value)
-                                dispatchBookingParams({type: "changeDate", value: e.target.value})      
+                                dispatchBookingParams({type: "changeDate", value: e.target.value})
+                                dispatchBookingParams({type: "changeTable", value: undefined, description: ''}) 
                             }}
-                        />       
+                        onBlur={(e)=>{formik.handleBlur(e)}}
+                        />
+                        {(formik.errors.date && formik.touched.date) && <CustomMessage type='error' testId={'date'}>{formik.errors.date}</CustomMessage>}       
                     </div>
+                    
                     <div className="input-group" role="group">
                         <label htmlFor="time">2. Select the time of your reservation</label>
-                        <select 
+                        <select
+                        className={`input input-${formik.errors.time && 'error'}`} 
                         name="" 
+                        data-testid={"time"} 
                         id="time"
                         value={bookingParams.time}
-                        onChange={(e) => dispatchBookingParams({type: "changeTime", value: e.target.value})}
-                        disabled={availableTimes && availableTimes.length == 0}
-                        >
+                        onChange={
+                            (e) => {
+                                formik.touched.time = true
+                                formik.handleChange(e)
+                                dispatchBookingParams({type: "changeTime", value: e.target.value})
+                                dispatchBookingParams({type: "changeTable", value: undefined, description: ''})
+                            }}
+                        onBlur={(e)=>{formik.handleBlur(e)}}
+                        disabled={!availableTimes || availableTimes.length == 0 || !enableChooseTime}>
                             <AvailableTimes times={availableTimes}/>
                         </select>
-                        <small>PS.: The restaurant closes at 11:00 PM</small>
+                        {!enableChooseTime && <CustomMessage type='loading' testId={'loading'}>Loading available booking times</CustomMessage>}
+                        {(formik.errors.time && formik.touched.time) && <CustomMessage type='error' testId={'time'}>{formik.errors.time}</CustomMessage>}     
+                        
                     </div>
                     <div className="input-group" role="group">
                         <label htmlFor="guests">3. How many people will be eating?</label>
                         <input type="number" name="" id="guests" min="1" max="4" placeholder="1"
+                        className={`input input-${formik.errors.guests && 'error'}`}
+                        data-testid={"guests"} 
                         value={bookingParams.guests}
-                        onChange={(e) => dispatchBookingParams({type: "changeGuests", value: e.target.value})}
+                        onChange={(e) => {
+                            formik.touched.guests = true
+                            formik.handleChange(e)
+                            dispatchBookingParams({type: "changeGuests", value: e.target.value})
+                        }}
+                        onBlur={(e)=>{formik.handleBlur(e)}}
                         />
+                        {(formik.errors.guests && formik.touched.guests) && <CustomMessage type='error' testId={'guests'}>{formik.errors.guests}</CustomMessage>}   
                     </div>
                     <div className="input-group"  role="group">
                         <label htmlFor="occasion">4. Is there a special occasion?</label>
                         <select 
+                        className={`input input-${formik.errors.occasion && 'error'}`}
                         name="" 
                         id="occasion"
-                        value={bookingParams.occasion}
-                        onChange={(e) => dispatchBookingParams({type: "changeOccasion", value: e.target.value})}
+                        data-testid={"occasion"} 
+                        value={bookingParams.occasion || 'None'}
+                        onChange={(e) => {
+                            formik.touched.occasion = true
+                            formik.handleChange(e)
+                            dispatchBookingParams({type: "changeOccasion", value: e.target.value})
+                        }}
+                        onBlur={(e)=>{formik.handleBlur(e)}}
                         >
                             <option value="None">None</option>
                             <option value="Birthday">Birthday</option>
                             <option value="Engagement">Engagement</option>
                             <option value="Anniversary">Anniversary</option>
                         </select>
+                        {(formik.errors.occasion && formik.touched.occasion) && <CustomMessage type='error' testId={'occasion'}>{formik.errors.occasion}</CustomMessage>}   
                     </div>
                     
                 </article>
             </form>
 
             <div className="submit-container-right">
-                <CTAButton onClick={nextStep}>
+                <CTAButton type="submit" form="optionsForm" disabled={!formik.isValid || !enableChooseTime} role="submit">
                     <p>Next Step</p>
                     <BiSolidRightArrow />
                 </CTAButton>
@@ -192,16 +270,22 @@ const tableList = [
     {x: 80, y:82, available: true, variant: "four_table_round", description: "outdoors"},
 ]
 
-const ChooseTable = ({step, nextStep, previousStep, dispatchBookingParams}) =>{
+const ChooseTable = ({step, nextStep, previousStep, bookingParams, dispatchBookingParams}) =>{
     
     const bgRef = useRef()
 
     const [dimensions, setDimensions] = useState({width: window.innerHeight, height: window.innerHeight})
     const [curTable, setCurTable] = useState({table: undefined, available: false})
 
-      useEffect(() => {
+        useEffect(()=>{
+            if (bookingParams.table != undefined)
+            {
+                setCurTable({table: bookingParams.table, available: tableList[bookingParams.table-1].available})
+            }
+        }, [])
 
-        
+
+      useEffect(() => {
         function handleResize() {
             setDimensions({width: bgRef.current.scrollWidth, height: bgRef.current.scrollHeight})
         }
@@ -226,13 +310,8 @@ const ChooseTable = ({step, nextStep, previousStep, dispatchBookingParams}) =>{
 
     const handleTableClick = (number, available, description = "") =>{
         setCurTable({table: number, available: available})
-        if (available)
-        {
-            dispatchBookingParams({type: "changeTable", value: number, description: description})
-        }
+        dispatchBookingParams({type: "changeTable", value: number, description: description})
     }
-
-
 
     return (
         <>
@@ -242,6 +321,22 @@ const ChooseTable = ({step, nextStep, previousStep, dispatchBookingParams}) =>{
                     <p className='step'>step {step}/3</p>
                 </div>
                     <article className='restaurant-form-box' role="group">
+                        <fieldset className='table-legend'>
+                            <legend>Legend</legend>
+                            <b><span>Click on a table to select it</span></b>
+                            <br />
+                            <br />
+                            <ul className='legend-list'>
+                                <li>
+                                    <img src={images.four_table_square_unavailable} alt="" />
+                                    Not Available
+                                </li>
+                                <li>
+                                    <img src={images.four_table_square} alt="" />
+                                    Available
+                                </li>
+                            </ul>
+                        </fieldset>
                         <div className='restaurant-plan' style={{background: `url(${images.restaurantPlan}) no-repeat `, backgroundSize: 'contain', height: `${dimensions.width}px`}} ref={bgRef} role="radiogroup">
                             
                             {tableList.map((el, id)=>{
@@ -252,8 +347,8 @@ const ChooseTable = ({step, nextStep, previousStep, dispatchBookingParams}) =>{
             </form>
             {curTable.table != undefined 
             && (curTable.available? 
-                <><p>Table No {curTable.table} is available! </p> <p> You may proceed with your reservation!</p></>
-            : <><p>Table No {curTable.table} is unavailable at this date!</p> <p>Please, choose another table</p></>
+                <><b><p>Table No {curTable.table} is available! </p> </b><p> You may proceed with your reservation!</p></>
+            : <><b> <p>Table No {curTable.table} is unavailable at this date!</p> </b> <p>Please, choose another table</p></>
             )
             
             }
@@ -276,6 +371,7 @@ const BookingSummary = ({step, nextStep, previousStep, bookingParams, submitForm
     
     const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const date = new Date(bookingParams.date).toLocaleDateString('en-US', dateOptions)
+    const [submittingForm, setSubmittingForm] = useState(false)
     
     return (
         <>  
@@ -285,7 +381,7 @@ const BookingSummary = ({step, nextStep, previousStep, bookingParams, submitForm
                     <p className='step'>step {step}/3</p>
                 </div>
                 <ul className='summary-list'>
-                    <li className='summary-item'><MdDateRange /> <b>Date</b>: {date} </li>
+                    <li className='summary-item'><MdDateRange /> <b>Date: </b>{date} </li>
                     <li className='summary-item'><BiTime /><b>Time:</b> {bookingParams.time}</li>
                     <li className='summary-item'><MdOutlinePlace /><b>Table:</b> number {bookingParams.table} - {bookingParams.description}</li>
                     <li className='summary-item'><MdPeopleOutline /><b>Number of people:</b> {bookingParams.guests}</li> 
@@ -300,11 +396,21 @@ const BookingSummary = ({step, nextStep, previousStep, bookingParams, submitForm
                     <p>No! take me back!</p>
                 </CTAButton>
                 
-                <CTAButton onClick={() => submitForm(bookingParams)}>
+                <CTAButton onClick={() => {
+                    submitForm(bookingParams)
+                    setSubmittingForm(true)
+                    }} 
+                    disabled={submittingForm}>
                     <p>Yes! Confirm Booking!</p>
                     <BiSolidRightArrow />
                 </CTAButton>
             </div>
+
+            {submittingForm && <div className='confirmation-message'>
+                <CustomMessage type='loading'>Sending your confirmation...</CustomMessage>
+            </div>}
+
+           {/*  {submittingForm &&  <CustomMessage type='loading'>Sending your confirmation...</CustomMessage>} */}
         </>
     )
 }

@@ -6,11 +6,11 @@ const Table = ({x, y, available, variant, number, scale = 1, handleTableClick, c
 
 
     return (
-        <div className="table" style={{left: `${x}%`, top: `${y}%`}} onClick={()=>handleTableClick(number, available, description)} role="radio">
+        <div className="table" style={{left: `${x}%`, top: `${y}%`}} onClick={()=>handleTableClick(number, available, description)} role="radio" id={`${x}-${y}`}>
             {chosen && <img src={images.selected} style={{position: "absolute", zIndex: -1, width: `${60 * scale}px`}}/>}
             <img src={images[availability]} alt="" className='chair' style={{width: `${50 * scale}px`}}/>
             
-            <p className="chair_number">{number}</p>
+            <label className="chair_number" htmlFor={`${x}-${y}`}>{number}</label>
         </div>
     )
 }

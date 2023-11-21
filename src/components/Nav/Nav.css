@@ -19,13 +19,22 @@ nav ul li{
     top: 0;
 }
 
+
 .nav-items a{
     color: #333333;
     text-decoration: none;
     font-weight: bold;
+    width: max-content;
+    padding: 5px;
+    border-radius: 3px;
 }
 
 .nav-items a:visited{
     color: #333333;
     font-weight: bold;
+}
+
+.nav-items a:hover{
+    background-color: #495E57;
+    color: white;
 }

@@ -32,6 +32,34 @@
     min-height: 416px;
 }
 
+.form-box label{
+    font-weight: bold;
+    color: #495E57;
+}
+
+.form-box .input{
+    height: 30px;
+    font-size: 16px;
+    border: 1px solid #777;
+    border-radius: 5px;
+    padding-left: 10px;
+    color: #495E57;
+    outline: none;
+}
+
+.form-box .input:not(.input-error):focus{
+    border: 2px solid black;
+}
+
+.form-box .input.input-error:focus{
+    border: 2px solid red;
+}
+
+.form-box .input.input-error{
+    border: 1px solid red;
+}
+
+
 .restaurant-form-box{
     box-sizing: border-box;
     border-top: 1px solid #aaa;
@@ -65,7 +93,13 @@
     gap: 5px;
 }
 
-
+.confirmation-message{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: right;
+    margin-top: 5px;
+}
 
 .reserve-form{
     display: flex;
@@ -154,7 +188,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
+
+.restaurant-plan .table label
+{
+    pointer-events: none;
+}
+
+
 
 .restaurant-plan .chair{
     height: auto;
@@ -176,11 +218,55 @@
     max-width: 100%;
     text-align: center;
     gap: 30px;
+    min-height: calc(100vh - 350px);
 }
 
 .booking-confirmation svg{
     color: rgb(0, 146, 0);
 }
+
+
+.booking-confirmation a.link{
+    padding: 5px;
+    border-radius: 5px;
+    width: fit-content;
+}
+
+.booking-confirmation a.link:hover{
+    width: fit-content;
+    background-color: #495E57;
+    color: white;
+}
+
+.table-legend{
+    width: max-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.legend-list{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 30px;
+    flex-direction: column;
+    
+}
+
+.legend-list > li{
+    gap: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    margin-left: 0;
+    padding: 0; 
+}
+
+.legend-list > li img{
+    width: 36px;
+}
+
 
 @media (min-width: 700px) {
 
@@ -189,6 +275,11 @@
         grid-template-columns: repeat(8, [col-start] 1fr);
     }
     
+    .legend-list{
+        flex-direction: row;
+        
+    }
+
     .reserve-step{
         grid-column: col-start 2 / span 6;
         display: block;
