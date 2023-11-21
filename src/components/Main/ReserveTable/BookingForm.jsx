@@ -6,7 +6,7 @@ import {LiaGlassCheersSolid} from 'react-icons/lia'
 //components
 import CTAButton from '../../CTAButton/CTAButton'
 import images from '../../../assets/images/images'
-import Table from './table'
+import Table from './Table'
 import { useState, useEffect, useRef, useReducer} from 'react'
 import { fetchAPI } from '../../../mockAPI'
 import { Formik, useFormik } from 'formik'
